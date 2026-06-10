@@ -1,7 +1,17 @@
-from ollama import chat
+from langchain_core.tools import tool
+from langgraph.prebuilt import ToolNode
 
-response = chat(
-    model="gemma4:12b",
-    messages=[{"role": "user", "content": "Hello!"}],
-)
-print(response.message.content)
+
+@tool
+def calculator(expression: str) -> str:
+    """
+    Evaluate a mathematical expression.
+    """
+    return str(eval(expression))
+
+
+TOOLS = [calculator]
+
+
+def get_common_tools():
+    return ToolNode(TOOLS)
