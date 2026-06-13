@@ -1,9 +1,9 @@
 from typing import Annotated
-from typing_extensions import TypedDict
 
-from langgraph.graph import StateGraph
+from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
+from typing_extensions import TypedDict
 
 
 class State(TypedDict):
-    messages: Annotated[list, add_messages]
+    messages: Annotated[list[BaseMessage], add_messages]

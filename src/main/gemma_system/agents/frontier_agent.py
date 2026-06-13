@@ -13,6 +13,4 @@ def run_frontier(state: State):
     print("\n=== TOOL CALLS ===")
     print(response.tool_calls)
 
-    return {
-        "messages": [response]
-    }
+    return {"messages": [response]}
