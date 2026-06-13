@@ -92,14 +92,12 @@ def ingest_docs(data_path: str, embedding_model: str = "nomic-embed-text"):
             vector_store = vector_store_class.from_documents(chunks_50, embeddings)
             counter += len(chunks_50)
             logger.info(f"Created vector store with {counter} chunks.")
-    except Exception as e:
-        raise VectorDBError(f"Error creating vector store: {str(e)}")
-    try:
-        logger.info("Saving vector store...")
-        save_vector_store(vector_store)
-        logger.info("Vector store saved successfully.")
-    except Exception as e:
-        raise VectorDBError(f"Error saving vector store: {str(e)}")
+            logger.info("Saving vector store...")
+            save_vector_store(vector_store)
+            logger.info("Vector store saved successfully.")
+    
+    except VectorDBError as e:
+        raise VectorDBError(f"Error creating or saving vector store: {str(e)}")
     return "Successfully ingested documents into the vector store."
 
 
