@@ -1,12 +1,25 @@
-from langchain_ollama import OllamaEmbeddings
+from collections import Counter
+from langchain_community.vectorstores import FAISS
+from main.gemma_system.vector_db.faiss_db import vector_db
 
-print("Creating embeddings object...")
+_, embeddings = vector_db()
+vector_store = FAISS.load_local(
+    "src/main/gemma_system/vector_db/vector_store",
+    embeddings,
+    allow_dangerous_deserialization=True,
+)
 
-emb = OllamaEmbeddings(model="nomic-embed-text")
+sources = []
 
-print("Calling embed_query...")
+for doc_id in vector_store.docstore._dict:
+    doc = vector_store.docstore._dict[doc_id]
+    sources.append(doc.metadata.get("source", "Unknown"))
 
-vector = emb.embed_query("hello world")
+for source in sorted(set(sources)):
+    print(source)
 
-print("Done")
-print(len(vector))
+for doc in vector_store.docstore._dict.values():
+    print(doc.metadata)
+    break
+
+print(vector_store.index.ntotal)

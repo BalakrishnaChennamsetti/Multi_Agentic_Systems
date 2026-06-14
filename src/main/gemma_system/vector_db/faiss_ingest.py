@@ -84,18 +84,31 @@ def ingest_docs(data_path: str, embedding_model: str = "nomic-embed-text"):
     docs = load_docs(data_path)
     chunked_docs = chunk_docs(docs)
     vector_store_class, embeddings = vector_db(embedding_model)
+    first_batch = chunked_docs[:EMBEDDING_BATCH_SIZE]
+    vector_store = vector_store_class.from_documents(
+        first_batch,
+        embeddings
+    )
     try:
-        counter = 0
-        for i in range(0, len(chunked_docs), EMBEDDING_BATCH_SIZE):
+        counter = 100
+        for i in range(EMBEDDING_BATCH_SIZE, len(chunked_docs), EMBEDDING_BATCH_SIZE):
             chunks_50 = chunked_docs[i : i + EMBEDDING_BATCH_SIZE]
             # logger.info(f"Testing vector store creation with {len(chunks_50)} chunks...")
-            vector_store = vector_store_class.from_documents(chunks_50, embeddings)
+            # vector_store = vector_store_class.from_documents(chunks_50, embeddings)
             counter += len(chunks_50)
-            logger.info(f"Created vector store with {counter} chunks.")
-            logger.info("Saving vector store...")
-            save_vector_store(vector_store)
-            logger.info("Vector store saved successfully.")
-    
+            logger.info("Adding vector store...")
+            vector_store.add_documents(chunks_50)
+            logger.info(
+            f"Indexed {min(i + EMBEDDING_BATCH_SIZE, len(chunked_docs))}/{len(chunked_docs)} chunks"
+        )
+            # if counter >= 200:
+            #     # save_vector_store(vector_store)
+            #     break
+        save_vector_store(vector_store)
+        if counter >= len(chunked_docs):
+            logger.info(f"Indexed {counter}/{len(chunked_docs)} chunks")
+        
+
     except VectorDBError as e:
         raise VectorDBError(f"Error creating or saving vector store: {str(e)}")
     return "Successfully ingested documents into the vector store."
