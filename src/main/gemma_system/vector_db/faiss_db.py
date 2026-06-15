@@ -4,7 +4,7 @@ from langchain_ollama import OllamaEmbeddings
 from main.gemma_system.exception_handling.exceptions import VectorDBError
 
 
-def vector_db(embedding_model: str = "nomic-embed-text"):
+def vector_db(embedding_model: str = "embeddinggemma"):
     try:
         embeddings = OllamaEmbeddings(model=embedding_model)
     except Exception as e:

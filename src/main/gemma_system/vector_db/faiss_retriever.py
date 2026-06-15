@@ -39,8 +39,8 @@ def retriever(query: str, top_k: int = 5):
 
 if __name__ == "__main__":
     # Example usage
-    query = "What is Nalanda University?"
-    top_k = 3
+    query = "Explain about Indian mathematics and its contributions to the world."
+    top_k = 5
     results = retriever(query, top_k)
     for idx, doc in enumerate(results):
         print(f"Document {idx + 1}: {doc[0]}")
