@@ -4,7 +4,7 @@ from unittest import result
 from agents.frontier_agent import run_frontier
 from agents.master_agent import run_master
 from agents_state import State
-from langgraph.graph import START, StateGraph
+from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import tools_condition
 from tools.common_tools import get_common_tools
 
@@ -14,17 +14,28 @@ graph_builder.add_node("chatbot", run_frontier)
 graph_builder.add_node("tools", get_common_tools())
 graph_builder.add_node("master", run_master)
 
-graph_builder.add_edge(START, "master")
-# graph_builder.add_edge("master", "chatbot")
+graph_builder.add_edge(START, "chatbot")
+graph_builder.add_edge("chatbot", "master")
 graph_builder.add_conditional_edges(
     "master",
     tools_condition,
 )
 
+graph_builder.add_conditional_edges(
+    "chatbot",
+    tools_condition,
+)
 graph_builder.add_edge(
     "tools",
     "master",
 )
+
+graph_builder.add_edge(
+    "tools",
+    "chatbot",
+)
+
+graph_builder.add_edge("master", END)
 
 graph = graph_builder.compile()
 
@@ -36,7 +47,7 @@ if __name__ == "__main__":
             "messages": [
                 (
                     "user",
-                    "Find value of x in equation X^2+2x+5=0, along with the steps used to solve it.",
+                    "What is the biggest Prime Number? Any faster ways to find the whether a number is prime or not? Based on ancient Indian mathematics.",
                 )
             ]
         },

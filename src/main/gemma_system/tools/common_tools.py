@@ -1,5 +1,6 @@
 from langchain_core.tools import tool
 from langgraph.prebuilt import ToolNode
+from main.gemma_system.vector_db.faiss_retriever import retriever
 
 
 @tool
@@ -9,8 +10,14 @@ def calculator(expression: str) -> str:
     """
     return str(eval(expression))
 
+@tool
+def retriever_as_tools(query: str, top_k: int = 5):
+    """
+    Retrieve relevant documents based on the query.
+    """
+    return retriever(query, top_k)
 
-TOOLS = [calculator]
+TOOLS = [calculator, retriever_as_tools]
 
 
 def get_common_tools():
