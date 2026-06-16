@@ -1,7 +1,7 @@
 from langchain_community.vectorstores import FAISS
 from langchain_ollama import OllamaEmbeddings
 
-from main.gemma_system.exception_handling.exceptions import VectorDBError
+from ..exception_handling.exceptions import VectorDBError
 
 
 def vector_db(embedding_model: str = "embeddinggemma"):

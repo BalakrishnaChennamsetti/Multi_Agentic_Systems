@@ -1,10 +1,8 @@
 from pprint import pprint
 
-from main.gemma_system.tools.common_tools import TOOLS
-
-from agents_state import State
-
-from main.gemma_system.utils import llm_client
+from ..agents_state import State
+from ..tools.common_tools import TOOLS
+from ..utils import llm_client
 
 
 def run_master(state: State):

@@ -5,12 +5,9 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from main.gemma_system.exception_handling.exceptions import (
-    DocumentLoadError,
-    VectorDBError,
-)
-from main.gemma_system.vector_db.constants import EMBEDDING_BATCH_SIZE, VECTOR_DB_PATH
-from main.gemma_system.vector_db.faiss_db import vector_db
+from ..exception_handling.exceptions import DocumentLoadError, VectorDBError
+from .constants import EMBEDDING_BATCH_SIZE, VECTOR_DB_PATH
+from .faiss_db import vector_db
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -61,14 +58,9 @@ def load_docs(data_path: str):
 
 def chunk_docs(docs, chunk_size=1000, chunk_overlap=200):
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size, chunk_overlap=chunk_overlap,
-        separators=[
-        "\n\n",
-        "\n",
-        ". ",
-        " ",
-        ""
-    ]
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        separators=["\n\n", "\n", ". ", " ", ""],
     )
     try:
         chunked_docs = text_splitter.create_documents(
@@ -80,9 +72,7 @@ def chunk_docs(docs, chunk_size=1000, chunk_overlap=200):
     return chunked_docs
 
 
-def save_vector_store(
-    vector_store, save_path: str = VECTOR_DB_PATH
-):
+def save_vector_store(vector_store, save_path: str = VECTOR_DB_PATH):
     vector_store.save_local(save_path)
     logger.info(f"Vector store saved to {save_path}")
 
@@ -92,10 +82,7 @@ def ingest_docs(data_path: str, embedding_model: str = "embeddinggemma"):
     chunked_docs = chunk_docs(docs)
     vector_store_class, embeddings = vector_db(embedding_model)
     first_batch = chunked_docs[:EMBEDDING_BATCH_SIZE]
-    vector_store = vector_store_class.from_documents(
-        first_batch,
-        embeddings
-    )
+    vector_store = vector_store_class.from_documents(first_batch, embeddings)
     try:
         counter = EMBEDDING_BATCH_SIZE
         for i in range(EMBEDDING_BATCH_SIZE, len(chunked_docs), EMBEDDING_BATCH_SIZE):
@@ -106,15 +93,14 @@ def ingest_docs(data_path: str, embedding_model: str = "embeddinggemma"):
             logger.info("Adding vector store...")
             vector_store.add_documents(chunks_50)
             logger.info(
-            f"Indexed {min(i + EMBEDDING_BATCH_SIZE, len(chunked_docs))}/{len(chunked_docs)} chunks"
-        )
+                f"Indexed {min(i + EMBEDDING_BATCH_SIZE, len(chunked_docs))}/{len(chunked_docs)} chunks"
+            )
             # if counter >= 200:
             #     # save_vector_store(vector_store)
             #     break
         save_vector_store(vector_store)
         if counter >= len(chunked_docs):
             logger.info(f"Indexed {counter}/{len(chunked_docs)} chunks")
-        
 
     except VectorDBError as e:
         raise VectorDBError(f"Error creating or saving vector store: {str(e)}")
@@ -135,7 +121,7 @@ if __name__ == "__main__":
 
             shutil.rmtree(vdb_path)
             logger.info(f"Deleted existing vector store at {vdb_path}.")
-            
+
     data_path = "src/main/gemma_system/raw_knowledge_source"
     embedding_model = "embeddinggemma"
     result = ingest_docs(data_path, embedding_model)

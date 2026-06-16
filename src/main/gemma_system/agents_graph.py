@@ -1,12 +1,13 @@
 from pprint import pprint
 from unittest import result
 
-from agents.frontier_agent import run_frontier
-from agents.master_agent import run_master
-from agents_state import State
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import tools_condition
-from tools.common_tools import get_common_tools
+
+from .agents.frontier_agent import run_frontier
+from .agents.master_agent import run_master
+from .agents_state import State
+from .tools.common_tools import get_common_tools
 
 graph_builder = StateGraph(State)
 
@@ -47,7 +48,8 @@ if __name__ == "__main__":
             "messages": [
                 (
                     "user",
-                    "What is the biggest Prime Number? Any faster ways to find the whether a number is prime or not? Based on ancient Indian mathematics.",
+                    # "What is the biggest Prime Number? Any faster ways to find the whether a number is prime or not? Based on ancient Indian mathematics.",
+                    "Find the next prime number after 2^{136,279,841}-1",
                 )
             ]
         },

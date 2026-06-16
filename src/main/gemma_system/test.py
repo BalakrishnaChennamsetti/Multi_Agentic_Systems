@@ -1,6 +1,8 @@
 from collections import Counter
+
 from langchain_community.vectorstores import FAISS
-from main.gemma_system.vector_db.faiss_db import vector_db
+
+from .vector_db.faiss_db import vector_db
 
 _, embeddings = vector_db()
 vector_store = FAISS.load_local(
@@ -23,3 +25,6 @@ for doc in vector_store.docstore._dict.values():
     break
 
 print(vector_store.index.ntotal)
+
+
+"Find the next prime number after 2^{136,279,841}-1"

@@ -1,11 +1,13 @@
 import logging
 
-from main.gemma_system.vector_db.constants import VECTOR_DB_PATH
-from main.gemma_system.vector_db.faiss_db import vector_db
 from langchain_community.vectorstores import FAISS
+
+from .constants import VECTOR_DB_PATH
+from .faiss_db import vector_db
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
 
 def retriever(query: str, top_k: int = 5):
     """
@@ -28,11 +30,15 @@ def retriever(query: str, top_k: int = 5):
     )
 
     logger.info(f"Performing similarity search for query: {query}")
-    retrieved_documents = vector_store.similarity_search_with_relevance_scores(query=query, k=top_k)
+    retrieved_documents = vector_store.similarity_search_with_relevance_scores(
+        query=query, k=top_k
+    )
 
     # Step 3: Retrieve the corresponding documents based on the indices
     logger.info(f"Retrieved {len(retrieved_documents)} documents for query: {query}")
-    retrieved_documents = [(page.page_content, page.metadata, score) for page, score in retrieved_documents]
+    retrieved_documents = [
+        (page.page_content, page.metadata, score) for page, score in retrieved_documents
+    ]
 
     return retrieved_documents
 
