@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from main.gemma_system.agents_graph import run_graph
+from src.main.gemma_system.agents_graph import run_graph
 from pydantic import BaseModel
 
 app = FastAPI()
