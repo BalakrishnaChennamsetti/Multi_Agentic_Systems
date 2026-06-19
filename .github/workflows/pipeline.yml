@@ -33,6 +33,13 @@ jobs:
           pip install -r requirements.txt
           echo "✅ Dependencies installed successfully"
 
+      - name: Code Formatting (Black)
+        run: |
+          echo "🖌️ Running code formatting with Black..."
+          pip install black
+          black src/
+          echo "✅ Code formatting completed successfully"
+
       - name: Run Linting (Code Quality Check)
         run: |
           echo "🔍 Starting linting process..."
