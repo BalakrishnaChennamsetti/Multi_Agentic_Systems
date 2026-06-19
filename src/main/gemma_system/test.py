@@ -1,5 +1,3 @@
-from collections import Counter
-
 from langchain_community.vectorstores import FAISS
 
 from .vector_db.faiss_db import vector_db
