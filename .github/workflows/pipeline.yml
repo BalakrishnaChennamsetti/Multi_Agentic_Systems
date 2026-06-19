@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "🖌️ Running code formatting with Black..."
           pip install black
-          black src/
+          black --check src/
           echo "✅ Code formatting completed successfully"
 
       - name: Run Linting (Code Quality Check)
