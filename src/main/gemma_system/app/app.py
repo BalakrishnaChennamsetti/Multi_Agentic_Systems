@@ -1,5 +1,5 @@
-import streamlit as st
 import requests
+import streamlit as st
 
 st.title("FastAPI + Streamlit Demo")
 
@@ -8,8 +8,7 @@ user_text = st.text_input("Enter some text")
 if st.button("Submit"):
 
     response = requests.post(
-        "http://gemma-fastapi:8000/process",
-        json={"text": user_text}
+        "http://gemma-fastapi:8000/process", json={"text": user_text}
     )
 
     if response.status_code == 200:

@@ -4,6 +4,7 @@ from ..utils import llm_client
 
 
 def run_frontier(state: State):
+    """This is the frontier agent which will be responsible for calling the tools and getting the response from the LLM."""
     client = llm_client()
 
     llm_with_tools = client.bind_tools(TOOLS)

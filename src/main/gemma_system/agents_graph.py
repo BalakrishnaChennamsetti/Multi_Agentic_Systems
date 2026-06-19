@@ -73,6 +73,7 @@ def run_graph(user_input: str):
     # print(result["messages"][-1].content)
     return result["messages"][-1].content
 
+
 if __name__ == "__main__":
     config = {"configurable": {"thread_id": "test"}}
     for event in graph.stream(

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from src.main.gemma_system.agents_graph import run_graph
 from pydantic import BaseModel
+
+from src.main.gemma_system.agents_graph import run_graph
 
 app = FastAPI()
 
@@ -18,7 +19,4 @@ def home():
 def process(data: UserInput):
     result = run_graph(data.text)
 
-    return {
-        "original": data.text,
-        "processed": result
-    }
+    return {"original": data.text, "processed": result}
