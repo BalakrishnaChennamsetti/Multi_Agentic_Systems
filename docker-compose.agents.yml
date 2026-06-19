@@ -1,0 +1,22 @@
+# models:
+#   gemma4:
+#     model: gemma4:12b
+
+services:
+  mcp-gateway:
+    image: docker/mcp-gateway
+    command:
+      - --tools=brave_web_search
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  agent:
+    build:
+      context: .
+      dockerfile: deploy/docker/Dockerfile.Agents
+
+    env_file:
+      - .env
+    environment:
+      endpoint_var: GEMMA4_ENDPOINT
+    depends_on:
+      - mcp-gateway
