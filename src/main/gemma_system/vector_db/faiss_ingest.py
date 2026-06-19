@@ -24,7 +24,7 @@ def load_docs(data_path: str):
                 logger.info(f"Loading document: {file}")
                 try:
                     content = file.read_text(encoding="utf-8")
-                except UnicodeDecodeError as e:
+                except UnicodeDecodeError:
                     logger.error(f"Failed to decode file: {file}")
                     raise
                 docs.append(
@@ -44,7 +44,7 @@ def load_docs(data_path: str):
                     pdf_docs = loader.load()
                     docs.extend(pdf_docs)
                     print(len(docs))
-                except Exception as e:
+                except Exception:
                     logger.error(f"Failed to load PDF file: {file}")
                     raise
             else:
