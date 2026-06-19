@@ -8,7 +8,7 @@ user_text = st.text_input("Enter some text")
 if st.button("Submit"):
 
     response = requests.post(
-        "http://127.0.0.1:8000/process",
+        "http://gemma-fastapi:8000/process",
         json={"text": user_text}
     )
 

@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: deploy/docker/Dockerfile.FastAPI
+    container_name: gemma-fastapi
+    ports:
+      - "8000:8000"
+    networks:
+      - gemma-net
+
+  streamlit:
+    build:
+      context: .
+      dockerfile: deploy/docker/Dockerfile.Streamlit
+    container_name: gemma-streamlit
+    ports:
+      - "8501:8501"
+    depends_on:
+      - fastapi
+    networks:
+      - gemma-net
+
+networks:
+  gemma-net:
+    driver: bridge
