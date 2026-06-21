@@ -1,5 +1,7 @@
 services:
   ollama:
+    image: ollama-latest
+    container_name: ollama
     build:
       context: .
       dockerfile: deploy/docker/Dockerfile.Ollama
@@ -23,6 +25,7 @@ services:
 
   mcp-gateway:
     image: docker/mcp-gateway
+    container_name: mcp-gateway
 
     command:
       - --tools=brave_web_search
@@ -33,6 +36,7 @@ services:
       - gemma-net
 
   agent:
+    image: gemma-agents
     container_name: gemma-agents
 
     build:
