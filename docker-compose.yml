@@ -1,7 +1,4 @@
 services:
-  dns:
-    - 8.8.8.8
-    - 1.1.1.1
   fastapi:
     container_name: gemma-fastapi
     env_file:
@@ -9,6 +6,9 @@ services:
     build:
       context: .
       dockerfile: deploy/docker/Dockerfile.FastAPI
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     ports:
       - "8000:8000"
     networks:
@@ -21,6 +21,9 @@ services:
     build:
       context: .
       dockerfile: deploy/docker/Dockerfile.Streamlit
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     ports:
       - "8501:8501"
     depends_on:
