@@ -112,7 +112,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           echo "🧪 Running Unit Tests with Coverage..."
-
+          pip install pytest pytest-cov
           python -m pytest src/test/gemma_systems/unit --cov=src/main/gemma_system --cov-report=term-missing -v
           echo "✅ Unit tests completed successfully"
   deploy-dev:
