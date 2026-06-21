@@ -33,6 +33,25 @@ jobs:
           pip install -r requirements.txt
           echo "✅ Dependencies installed successfully"
 
+      - name: Checking for vulnerabilities in dependencies with Safety
+        run: |
+          echo "🔍 Checking for vulnerabilities in dependencies..."
+          pip install safety
+          safety check -r requirements.txt
+          echo "✅ Dependency vulnerability check completed successfully"
+
+      - name: Stricter Security check with pip-audit
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.txt --strict
+          echo "✅ Security audit completed successfully"
+
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          format: table
+
       - name: Code Formatting Check (Isort)
         run: |
           echo "🧹 Running import sorting with isort..."
@@ -54,17 +73,23 @@ jobs:
           flake8 src/
           echo "✅ Linting completed successfully"
 
-      - name: Build FastAPI Docker image
+      - name: Run docker compose for all services
         run: |
-          echo "🐳 Building FastAPI Docker image..."
-          docker build -t gemma-fastapi -f deploy/docker/Dockerfile.FastAPI .
-          echo "✅ FastAPI image built successfully"
+          echo "🐳 Starting all services with docker-compose..."
+          docker-compose -f docker-compose.yml -f docker-compose.agents.yml up -d
+          echo "✅ All services started successfully"
 
-      - name: Build Streamlit Docker image
-        run: |
-          echo "🐳 Building Streamlit Docker image..."
-          docker build -t gemma-streamlit -f deploy/docker/Dockerfile.Streamlit .
-          echo "✅ Streamlit image built successfully"
+      # - name: Build FastAPI Docker image
+      #   run: |
+      #     echo "🐳 Building FastAPI Docker image..."
+      #     docker build -t gemma-fastapi -f deploy/docker/Dockerfile.FastAPI .
+      #     echo "✅ FastAPI image built successfully"
+
+      # - name: Build Streamlit Docker image
+      #   run: |
+      #     echo "🐳 Building Streamlit Docker image..."
+      #     docker build -t gemma-streamlit -f deploy/docker/Dockerfile.Streamlit .
+      #     echo "✅ Streamlit image built successfully"
 
       - name: Run FastAPI container (Test Stage)
         run: |
