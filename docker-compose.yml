@@ -1,25 +1,26 @@
 services:
-  ollama:
-    image: ollama/ollama
-    ports:
-      - "11434:11434"
+  dns:
+    - 8.8.8.8
+    - 1.1.1.1
   fastapi:
+    container_name: gemma-fastapi
     env_file:
       - .env
     build:
       context: .
       dockerfile: deploy/docker/Dockerfile.FastAPI
-    container_name: gemma-fastapi
     ports:
       - "8000:8000"
     networks:
       - gemma-net
 
   streamlit:
+    container_name: gemma-streamlit
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: deploy/docker/Dockerfile.Streamlit
-    container_name: gemma-streamlit
     ports:
       - "8501:8501"
     depends_on:

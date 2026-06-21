@@ -1,22 +1,54 @@
-# models:
-#   gemma4:
-#     model: gemma4:12b
-
 services:
+  ollama:
+    build:
+      context: .
+      dockerfile: deploy/docker/Dockerfile.Ollama
+
+    ports:
+      - "11434:11434"
+
+    volumes:
+      - ollama_data:/root/.ollama
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 15s
+      timeout: 10s
+      retries: 60
+      start_period: 30s
+
   mcp-gateway:
     image: docker/mcp-gateway
+
     command:
       - --tools=brave_web_search
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
   agent:
+    container_name: gemma-agents
+
     build:
       context: .
       dockerfile: deploy/docker/Dockerfile.Agents
 
     env_file:
       - .env
+
     environment:
-      endpoint_var: GEMMA4_ENDPOINT
+      GEMMA4_ENDPOINT: http://ollama:11434
+
     depends_on:
-      - mcp-gateway
+      ollama:
+        condition: service_healthy
+
+      mcp-gateway:
+        condition: service_started
+
+volumes:
+  ollama_data:
+
+networks:
+  default:
+    driver: bridge

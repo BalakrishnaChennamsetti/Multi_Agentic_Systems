@@ -1,0 +1,7 @@
+FROM ollama/ollama
+
+COPY deploy/entrypoint/start-ollama.sh /start-ollama.sh
+
+RUN chmod +x /start-ollama.sh
+
+ENTRYPOINT ["/start-ollama.sh"]
