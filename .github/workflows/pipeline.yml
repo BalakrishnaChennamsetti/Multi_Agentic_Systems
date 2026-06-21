@@ -81,36 +81,6 @@ jobs:
           docker compose -f docker-compose.yml -f docker-compose.agents.yml up -d --build
           echo "✅ All services started successfully"
 
-      # - name: Build FastAPI Docker image
-      #   run: |
-      #     echo "🐳 Building FastAPI Docker image..."
-      #     docker build -t gemma-fastapi -f deploy/docker/Dockerfile.FastAPI .
-      #     echo "✅ FastAPI image built successfully"
-
-      # - name: Build Streamlit Docker image
-      #   run: |
-      #     echo "🐳 Building Streamlit Docker image..."
-      #     docker build -t gemma-streamlit -f deploy/docker/Dockerfile.Streamlit .
-      #     echo "✅ Streamlit image built successfully"
-
-      - name: Run FastAPI container (Test Stage)
-        run: |
-          echo "🚀 Starting FastAPI container..."
-          docker run -d -p 8000:8000 --name fastapi gemma-fastapi
-          sleep 5
-          echo "🔎 Checking FastAPI health..."
-          curl http://localhost:8000/docs || (echo "❌ FastAPI failed" && exit 1)
-          echo "✅ FastAPI is healthy"
-
-      - name: Run Streamlit container (Smoke Test)
-        run: |
-          echo "🚀 Starting Streamlit container..."
-          docker run -d -p 8501:8501 --name streamlit gemma-streamlit
-          sleep 5
-          echo "🔎 Checking Streamlit health..."
-          curl http://localhost:8501 || (echo "❌ Streamlit failed" && exit 1)
-          echo "✅ Streamlit is healthy"
-
       - name: Cleanup containers
         run: |
           echo "🧹 Cleaning up containers..."
@@ -142,7 +112,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           echo "🧪 Running Unit Tests with Coverage..."
-          pip install pytest pytest-cov
+
           python -m pytest src/test/gemma_systems/unit --cov=src/main/gemma_system --cov-report=term-missing -v
           echo "✅ Unit tests completed successfully"
   deploy-dev:
