@@ -1,5 +1,8 @@
 name: CI/CD Pipeline
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
@@ -120,13 +123,16 @@ jobs:
     needs: [build-test, unit-tests]
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Deploy to Development Environment
         run: |
           echo "🚀 Deploying to development environment..."
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch origin
-          git checkout dev
-          git merge origin/master --no-edit
+
+          git checkout -B dev
+
           git push origin dev
           echo "✅ Deployment completed successfully"
