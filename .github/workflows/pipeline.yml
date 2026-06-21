@@ -37,7 +37,7 @@ jobs:
         run: |
           echo "🔍 Checking for vulnerabilities in dependencies..."
           pip install safety
-          safety check -r requirements.txt
+          safety scan -r requirements.txt
           echo "✅ Dependency vulnerability check completed successfully"
 
       - name: Stricter Security check with pip-audit
