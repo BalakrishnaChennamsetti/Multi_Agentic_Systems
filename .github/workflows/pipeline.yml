@@ -8,6 +8,8 @@ on:
     branches:
       - master
 
+workflow_dispatch:
+
 jobs:
   build-test:
     runs-on: ubuntu-latest
@@ -35,13 +37,6 @@ jobs:
           echo "📦 Installing Python dependencies..."
           pip install -r requirements.txt
           echo "✅ Dependencies installed successfully"
-
-      # - name: Checking for vulnerabilities in dependencies with Safety
-      #   run: |
-      #     echo "🔍 Checking for vulnerabilities in dependencies..."
-      #     pip install safety
-      #     safety scan -r requirements.txt
-      #     echo "✅ Dependency vulnerability check completed successfully"
 
       - name: Stricter Security check with pip-audit
         run: |
@@ -92,7 +87,7 @@ jobs:
           echo "✅ Cleanup completed successfully"
 
       - name: Pipeline Completed
-        run: echo "🎉 CI/CD Pipeline finished successfully"
+        run: echo "🎉 Build completed successfully"
 
   unit-tests:
     runs-on: ubuntu-latest
@@ -118,10 +113,13 @@ jobs:
           pip install pytest pytest-cov
           python -m pytest src/test/gemma_systems/unit --cov=src/main/gemma_system --cov-report=term-missing -v
           echo "✅ Unit tests completed successfully"
+
   deploy-dev:
     runs-on: ubuntu-latest
     needs: [build-test, unit-tests]
 
+    environment:
+      name: development
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -136,3 +134,29 @@ jobs:
 
           git push origin dev
           echo "✅ Deployment completed successfully"
+
+    deploy-prod:
+      runs-on: ubuntu-latest
+      needs: [build-test, unit-tests]
+
+      deploy-prod:
+        if: github.event_name == 'workflow_dispatch'
+
+      environment:
+        name: production
+
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Deploy to Production Environment
+          run: |
+            echo "🚀 Deploying to production environment..."
+
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+            git checkout -B prod
+            git push origin prod
+
+            echo "✅ Deployment completed successfully"
