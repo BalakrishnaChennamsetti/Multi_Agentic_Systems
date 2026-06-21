@@ -13,11 +13,13 @@ services:
       - ollama_data:/root/.ollama
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      test: ["CMD", "ollama", "show", "gemma4:12b"]
       interval: 15s
       timeout: 10s
       retries: 60
       start_period: 30s
+    networks:
+      - gemma-net
 
   mcp-gateway:
     image: docker/mcp-gateway
@@ -27,6 +29,8 @@ services:
 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - gemma-net
 
   agent:
     container_name: gemma-agents
@@ -44,10 +48,12 @@ services:
 
       mcp-gateway:
         condition: service_started
+    networks:
+      - gemma-net
 
 volumes:
   ollama_data:
 
 networks:
-  default:
+  gemma-net:
     driver: bridge
