@@ -33,12 +33,12 @@ jobs:
           pip install -r requirements.txt
           echo "✅ Dependencies installed successfully"
 
-      - name: Checking for vulnerabilities in dependencies with Safety
-        run: |
-          echo "🔍 Checking for vulnerabilities in dependencies..."
-          pip install safety
-          safety scan -r requirements.txt
-          echo "✅ Dependency vulnerability check completed successfully"
+      # - name: Checking for vulnerabilities in dependencies with Safety
+      #   run: |
+      #     echo "🔍 Checking for vulnerabilities in dependencies..."
+      #     pip install safety
+      #     safety scan -r requirements.txt
+      #     echo "✅ Dependency vulnerability check completed successfully"
 
       - name: Stricter Security check with pip-audit
         run: |
