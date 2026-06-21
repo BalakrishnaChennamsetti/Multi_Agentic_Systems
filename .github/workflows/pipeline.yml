@@ -74,6 +74,8 @@ jobs:
           echo "✅ Linting completed successfully"
 
       - name: Run docker compose for all services
+        env:
+          GEMMA4_ENDPOINT: ${{ secrets.GEMMA4_ENDPOINT }}
         run: |
           echo "🐳 Starting all services with docker-compose..."
           docker compose -f docker-compose.yml -f docker-compose.agents.yml up -d --build

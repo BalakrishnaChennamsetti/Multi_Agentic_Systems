@@ -35,11 +35,8 @@ services:
       context: .
       dockerfile: deploy/docker/Dockerfile.Agents
 
-    env_file:
-      - .env
-
     environment:
-      GEMMA4_ENDPOINT: http://ollama:11434
+      GEMMA4_ENDPOINT: GEMMA4_ENDPOINT
 
     depends_on:
       ollama:

@@ -1,8 +1,6 @@
 services:
   fastapi:
     container_name: gemma-fastapi
-    env_file:
-      - .env
     build:
       context: .
       dockerfile: deploy/docker/Dockerfile.FastAPI
@@ -16,8 +14,6 @@ services:
 
   streamlit:
     container_name: gemma-streamlit
-    env_file:
-      - .env
     build:
       context: .
       dockerfile: deploy/docker/Dockerfile.Streamlit
