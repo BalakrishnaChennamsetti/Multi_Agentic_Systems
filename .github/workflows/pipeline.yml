@@ -76,7 +76,7 @@ jobs:
       - name: Run docker compose for all services
         run: |
           echo "🐳 Starting all services with docker-compose..."
-          docker-compose -f docker-compose.yml -f docker-compose.agents.yml up -d
+          docker compose -f docker-compose.yml -f docker-compose.agents.yml up -d --build
           echo "✅ All services started successfully"
 
       # - name: Build FastAPI Docker image
